@@ -12,9 +12,10 @@ import android.view.MenuItem;
 import com.codepath.apps.simpletwitter.fragments.HomeTimelineFragment;
 import com.codepath.apps.simpletwitter.fragments.MentionsTimelineFragment;
 import com.codepath.apps.simpletwitter.fragments.TweetsListFragment;
+import com.codepath.apps.simpletwitter.fragments.TweetsListFragment.OnItemClickListener;
 import com.codepath.apps.simpletwitter.listeners.FragmentTabListener;
 
-public class TimelineActivity extends FragmentActivity {
+public class TimelineActivity extends FragmentActivity implements OnItemClickListener {
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -62,7 +63,7 @@ public class TimelineActivity extends FragmentActivity {
 
 		Tab tab2 = actionBar
 			.newTab()
-			.setText("Second")
+			.setText("Mentions")
 			.setIcon(R.drawable.ic_mentions)
 			.setTag("MentionsTimelineFragment")
 			.setTabListener(
@@ -74,6 +75,12 @@ public class TimelineActivity extends FragmentActivity {
 	
 	public void onProfileView(MenuItem mi){
 		Intent i = new Intent(this, ProfileActivity.class);
+		startActivity(i);
+	}
+	@Override
+	public void onTweetClicked(String screenName) {
+		Intent i = new Intent(this, ProfileActivity.class);
+		i.putExtra("screenName", screenName);
 		startActivity(i);
 	}
 

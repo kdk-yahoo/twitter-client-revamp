@@ -4,9 +4,11 @@ import org.scribe.builder.api.Api;
 import org.scribe.builder.api.TwitterApi;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.codepath.oauth.OAuthBaseClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
+import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 
 /*
@@ -59,12 +61,17 @@ public class TwitterClient extends OAuthBaseClient {
 		client.get(apiURL, null, handler);
 	}
 	
-	public void getUserTimeline(long maxID, AsyncHttpResponseHandler handler){
+	public void getUserTimeline(long maxID, String screenName, AsyncHttpResponseHandler handler){
 		String apiURL = getApiUrl("statuses/user_timeline.json");
 		RequestParams params = new RequestParams();
 		if(maxID != Long.MAX_VALUE){ 
 			params.put("max_id", Long.toString(maxID));
 		}
+		if(screenName != null){
+			Log.d("click", screenName);
+			params.put("screen_name", screenName);
+		}
+		Log.d("click", "screen_name null");
 		params.put("count", "50");
 		params.put("since_id","1");
 		client.get(apiURL,params, handler);
@@ -75,6 +82,13 @@ public class TwitterClient extends OAuthBaseClient {
 		RequestParams params = new RequestParams();
 		params.put("status", status);
 		client.post(apiURL, params, handler);
+	}
+
+	public void getInfo(String screenName, JsonHttpResponseHandler handler) {
+		String apiURL = getApiUrl("users/show.json");
+		RequestParams params = new RequestParams();
+		params.put("screen_name", screenName);
+		client.get(apiURL,params, handler);
 	}
 	
 

@@ -2,33 +2,56 @@ package com.codepath.apps.simpletwitter;
 
 import org.json.JSONObject;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.codepath.apps.simpletwitter.fragments.TweetsListFragment.OnItemClickListener;
+import com.codepath.apps.simpletwitter.fragments.UserTimelineFragment;
 import com.codepath.apps.simpletwitter.models.User;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
-public class ProfileActivity extends FragmentActivity {
+public class ProfileActivity extends FragmentActivity implements OnItemClickListener {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_profile);
 		Log.d("tag", "here");
-		getActionBar().setTitle("penis");
-		loadProfileInfo();
+		if(null == getIntent().getStringExtra("screenName")){
+			loadMyProfileInfo();
+		}else{
+			loadProfileInfo(getIntent().getStringExtra("screenName"));
+		}
 		
+		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+		UserTimelineFragment frag =  UserTimelineFragment.newInstance(getIntent().getStringExtra("screenName"));
+		ft.replace(R.id.flProfileTweets, frag);
+		ft.commit();
 	}
 
-	private void loadProfileInfo(){
-		Log.d("tag", "here 2");
+	private void loadMyProfileInfo(){
+		Log.d("simpletwitter", "load my info");
 		TwitterApplication.getRestClient().getMyInfo(new JsonHttpResponseHandler(){
+			@Override
+			public void onSuccess(JSONObject json) {
+				User u = User.fromJson(json);
+				getActionBar().setTitle("@"+u.getScreenName());
+				populateProfileHeader(u);
+			}
+		});
+	}
+	
+	private void loadProfileInfo(String screenName){
+		Log.d("simpletwitter", "load info");
+		TwitterApplication.getRestClient().getInfo(screenName, new JsonHttpResponseHandler(){
 			@Override
 			public void onSuccess(JSONObject json) {
 				User u = User.fromJson(json);
@@ -71,5 +94,12 @@ public class ProfileActivity extends FragmentActivity {
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
+	}
+
+	@Override
+	public void onTweetClicked(String screenName) {
+		Intent i = new Intent(this, ProfileActivity.class);
+		i.putExtra("screenName", screenName);
+		startActivity(i);
 	}
 }

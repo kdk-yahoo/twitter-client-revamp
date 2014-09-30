@@ -4,12 +4,14 @@ import java.util.ArrayList;
 
 import org.json.JSONArray;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
@@ -28,6 +30,8 @@ public abstract class TweetsListFragment extends Fragment {
 	private ListView lvTweets;
 	protected TwitterClient client;
 	protected JsonHttpResponseHandler handler;
+
+	private OnItemClickListener listener;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -53,6 +57,9 @@ public abstract class TweetsListFragment extends Fragment {
 	}
 	
 
+	public interface OnItemClickListener{
+		public void onTweetClicked(String screenName);
+	}
 	
 	
 	
@@ -73,9 +80,33 @@ public abstract class TweetsListFragment extends Fragment {
 			
 		});
 
-		
+		setListener();
 		return v;
 	}
+
+	private void setListener() {
+		lvTweets.setOnItemClickListener( new AdapterView.OnItemClickListener() {
+
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view,
+					int position, long id) {
+				Log.d("click", "click");
+				listener.onTweetClicked(tweets.get(position).getUser().getScreenName());
+				
+			}
+		});
+		
+	}
+
+	public void onAttach(Activity activity){
+		super.onAttach(activity);
+		if(activity instanceof OnItemClickListener){
+			listener = (OnItemClickListener) activity;
+		}else{
+			throw new ClassCastException(activity.toString() + " must implement TweetListFragment.OnItemClickListener");
+		}
+	}
+	
 	
 	public void addAll(ArrayList<Tweet> tweets){
 		aTweets.addAll(tweets);
