@@ -9,8 +9,7 @@ User stories completed:
    * [X] Required: User can sign in to Twiter using OAuth login. 
    * [X] Required: User can switch between home timelines and thier mentions with inifinte scroll.
    * [X] Required: User can navigate to view their own profile.
-   * [ ] Required: User can navigate to view another user's profile.
-      * Half working right now. Can view profile but for some reason tweets are still loading from my user.
+   * [X] Required: User can navigate to view another user's profile.
    * [X] Required: User can view tweets from thier timeline.
    * [X] Required: User should be able to see the username, name, body and timestamp for each tweet
    * [X] Required: User should be displayed the relative timestamp for a tweet "8m", "7h"
