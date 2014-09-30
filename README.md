@@ -21,4 +21,4 @@ User stories completed:
 
 Walkthrough:
 
-![Video Walkthrough](simple-twitter22.gif)
+![Video Walkthrough](simple-twitter2.gif)
