@@ -23,13 +23,19 @@ public class UserTimelineFragment extends TweetsListFragment {
 	}
 	
 	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
 		screenName = getArguments().getString("screenName");
+		super.onCreate(savedInstanceState);
+		Log.d("click", "onCreate");
+		populateTimeline(Long.MAX_VALUE);
 	}
 	
 	@Override
 	protected void populateTimeline(long maxID){
-		Log.d("click", "lalalala");
+		if(screenName == null){
+			Log.d("popTimeLine", "null");
+		}else{
+			Log.d("popTimeLine", screenName);
+		}
 		client.getUserTimeline(maxID, screenName, handler);
 	}
 }
